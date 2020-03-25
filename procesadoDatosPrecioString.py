@@ -31,10 +31,10 @@ def procesar_datos_string():
     diccionario = {}
 
     # Variable donde guardamos los datos del json a procesar
-    values = pd.read_json(str(input("Archivo donde están los datos de la demanda (sin extensión): ")) + ".json")
+    values = pd.read_json(input("Archivo donde están los datos de la demanda (sin extensión): ") + ".json")
 
     # Bucle para rellenar el diccionario con los valores del json
-    # Iteramos sobre los valores de la clave "values" ya que es donde estan los datos de la demanda
+    # Iteramos sobre los valores de la clave "values" ya que es donde estan los datos del precio
     for dic in values["values"]:
 
         # Sacamos la fecha del valor usando la clave "datetime"
@@ -45,11 +45,12 @@ def procesar_datos_string():
         # Si es la primera hora de un dia, inicializamos su diccionario de valores
         if hora == "00:00":
             diccionario.update({fecha_real: {}})
+
         # Si no, lo inicializamos con lo que tenia antes
         else:
             diccionario.update({fecha_real: diccionario[fecha_anterior]})
 
-        # Actualizamos el diccionario, metiendo la hora con su valor de demanda
+        # Actualizamos el diccionario, metiendo la hora con su valor de precio
         diccionario[fecha_real].update({hora: dic["value"]})
 
         # Fecha que usaremos para inicializar el diccionario si no es la primera hora
@@ -59,39 +60,13 @@ def procesar_datos_string():
     # Hay que hacer la transpuesta de la tabla para que salga como queremos
     datos = pd.DataFrame(diccionario).transpose()
 
-    # Lista para no perder los indices de las columnas
-    lista = list(datos.columns)
-
-    # Lista para las 24 horas del dia
-    horas = [x for x in range(0, 24)]
-
-    # Lista que usaremos para hacer la media de cada hora
-    lista_indices = [x for x in range(0, 139, 6)]
-
-    # Creamos un nuevo DataFrame donde guardaremos los datos nuevos
-    columna = pd.DataFrame()
-
-    # Bucle que guarda en las columnas de columna las medias de todas las horas
-    for i in lista_indices:
-
-        # Concatenamos columna con la nueva columna de medias
-        columna = pd.concat([columna, pd.DataFrame(datos.iloc[:, i:i + 6].mean(axis=1))], axis=1)
-
-    # Quitamos todos los indices de columnas que no sean horas exactas
-    for i in horas:
-        for j in range(10, 60, 10):
-            lista.remove(str(i).zfill(2) + ":" + str(j))
-
-    # Actualizamos los indices de columnas del DataFrame columna
-    columna.columns = lista
-
     # Para arreglar el problema de los dias a los que le faltan horas
-    m = columna.mean(axis=1)
-    for i, col in enumerate(columna):
-        columna.iloc[:, i] = columna.iloc[:, i].fillna(m)
+    m = datos.mean(axis=1)
+    for i, col in enumerate(datos):
+        datos.iloc[:, i] = datos.iloc[:, i].fillna(m)
 
     # Retornamos el DataFrame final
-    return columna
+    return datos
 
 
 if __name__ == "__main__":

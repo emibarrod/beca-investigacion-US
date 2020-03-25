@@ -4,7 +4,10 @@ import os
 
 
 def recolecta_datos_meses():
-    # define the name of the directory to be created
+    """
+    Funciona igual que recolecta_datos_anyos, pero de mes en mes
+    :return: Una carpeta para demanda y otra para precio, con las demandas y precios por meses
+    """
     path1 = input("Nombre de la carpeta a crear para demanda: ")
     path2 = input("Nombre de la carpeta a crear para precio: ")
     print("")
