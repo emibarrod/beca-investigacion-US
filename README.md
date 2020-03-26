@@ -7,7 +7,7 @@ El proyecto se divide en varias fases:
 3. Clustering de datos
 4. Predicciones sobre los datos
 
- Debemos hacer todo esto para los datos de 207, 2018 y 2019.  
+ Debemos hacer todo esto para los datos de 2017, 2018 y 2019.  
  El plazo del proyecto es de 3 semanas.
 
  ---
