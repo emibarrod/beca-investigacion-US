@@ -86,12 +86,11 @@ def procesar_datos_string():
     columna.columns = lista
 
     # Para arreglar el problema de los dias a los que le faltan horas
-    m = columna.mean(axis=1)
-    for i, col in enumerate(columna):
-        columna.iloc[:, i] = columna.iloc[:, i].fillna(m)
+    for col in columna.columns:
+        columna[col] = columna[col].fillna(columna[col].mean())
 
     # Retornamos el DataFrame final
-    return columna
+    return columna.round(2)
 
 
 if __name__ == "__main__":

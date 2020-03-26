@@ -31,7 +31,7 @@ def procesar_datos_string():
     diccionario = {}
 
     # Variable donde guardamos los datos del json a procesar
-    values = pd.read_json(input("Archivo donde están los datos de la demanda (sin extensión): ") + ".json")
+    values = pd.read_json(input("Archivo donde están los datos del precio (sin extensión): ") + ".json")
 
     # Bucle para rellenar el diccionario con los valores del json
     # Iteramos sobre los valores de la clave "values" ya que es donde estan los datos del precio
@@ -61,9 +61,8 @@ def procesar_datos_string():
     datos = pd.DataFrame(diccionario).transpose()
 
     # Para arreglar el problema de los dias a los que le faltan horas
-    m = datos.mean(axis=1)
-    for i, col in enumerate(datos):
-        datos.iloc[:, i] = datos.iloc[:, i].fillna(m)
+    for col in datos.columns:
+        datos[col] = datos[col].fillna(datos[col].mean())
 
     # Retornamos el DataFrame final
     return datos
